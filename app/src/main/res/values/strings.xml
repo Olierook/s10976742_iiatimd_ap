@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LCKV Appjudanten</string>
+    <string name="header_text">LCKV</string>
+
+    <string name="people_view_button">Deelnemers</string>
+    <string name="store_view_button">Kantine</string>
+    <string name="product_view_button">Producten</string>
+
+    <string name="tent1_button">Tent 1</string>
+    <string name="tent2_button">Tent 2</string>
+    <string name="tent3_button">Tent 3</string>
+    <string name="tent4_button">Tent 4</string>
+    <string name="tent5_button">Tent 5</string>
+    <string name="tent6_button">Tent 6</string>
+
+</resources>
