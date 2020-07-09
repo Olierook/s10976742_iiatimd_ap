@@ -19,8 +19,8 @@
     <fragment
         android:id="@+id/tent_select_fragment"
         android:name="com.example.lckvappjudanten.TentSelectFragment"
-        android:layout_width="414dp"
-        android:layout_height="177dp"
+        android:layout_width="412dp"
+        android:layout_height="149dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
