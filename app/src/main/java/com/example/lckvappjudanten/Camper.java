@@ -1,8 +1,13 @@
 package com.example.lckvappjudanten;
 
+import java.util.UUID;
+
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import static java.util.UUID.fromString;
 
 @Entity
 public class Camper {
@@ -14,16 +19,16 @@ public class Camper {
     private Double startingBalance;
     @ColumnInfo
     private Double currentBalance;
+    @NonNull
     @PrimaryKey
-    private int uuid;
+    private String uuid = UUID.randomUUID().toString();
 
 
-    public Camper(String name, int tentNumber, Double startingBalance, Double currentBalance, int uuid) {
+    public Camper(String name, int tentNumber, Double startingBalance, Double currentBalance) {
         this.name = name;
         this.tentNumber = tentNumber;
         this.startingBalance = startingBalance;
         this.currentBalance = currentBalance;
-        this.uuid = uuid;
     }
 
     public String getName() {
@@ -58,11 +63,11 @@ public class Camper {
         this.currentBalance = currentBalance;
     }
 
-    public int getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(int uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

@@ -46,8 +46,8 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
         df.setMinimumFractionDigits(2);
         df.setMaximumFractionDigits(4);
         df.setRoundingMode(RoundingMode.DOWN);
-        String newbalance = "€" + df.format(this.balance);
-        store_balance.setText(newbalance);
+        String new_balance = "€" + df.format(this.balance);
+        store_balance.setText(new_balance);
     }
 
 //    @Override
