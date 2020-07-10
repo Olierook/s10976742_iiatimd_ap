@@ -9,47 +9,34 @@
     >
 
     <TextView
-        android:id="@+id/store_name"
+        android:id="@+id/add_product_txt"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:textSize="22sp"
+        android:text="@string/add_product_txt"
         android:textColor="#000"
-        app:layout_constraintBottom_toBottomOf="@+id/add_camper_fab"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_product_fab"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/add_camper_fab" />
+        app:layout_constraintTop_toTopOf="@+id/add_product_fab" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_camper_fab"
+        android:id="@+id/add_product_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
+        android:focusable="true"
         android:foregroundGravity="center"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorPrimary"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:focusable="true" />
-
-
-    <TextView
-        android:id="@+id/store_balance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/add_camper_fab"
-        app:layout_constraintEnd_toStartOf="@+id/add_camper_fab"
-        app:layout_constraintHorizontal_bias="0.881"
-        app:layout_constraintStart_toEndOf="@+id/store_name"
-        app:layout_constraintTop_toTopOf="@+id/add_camper_fab"
-        app:layout_constraintVertical_bias="0.523" />
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

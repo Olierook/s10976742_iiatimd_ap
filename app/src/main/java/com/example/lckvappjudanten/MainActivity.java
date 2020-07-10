@@ -26,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,35 +39,20 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         db.camperDao().insertAll(new Camper("henkk", 7, 20.0, 15.75));
         String name = db.camperDao().getAll().get(0).getName();
-        Log.d("banaan", name);
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-
+//        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
         final String URL = "http://10.0.2.2:8000/api/campers";
-//        final String URL = "http://ip.jsontest.com/";
-////
-////        StringRequest stringRequest = new StringRequest(Request.Method.GET,
-////                URL,
-////                new Response.Listener<String>() {
-////                    @Override
-////                    public void onResponse(String response) {
-////                        Log.d("ja", response);
-////                    }
-////                },
-////                new Response.ErrorListener() {
-////                    @Override
-////                    public void onErrorResponse(VolleyError error) {
-////                        Log.d("nee", "hoi" + error.getMessage());
-////
-////                    }
-////                });
-////        queue.add(stringRequest);
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
 
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("hoi", response.toString());
+                        try {
+                            Log.d("hoi", response.getJSONObject(0).getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -75,59 +62,42 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-        queue.add(jsonObjectRequest);
-//        try {
-//            RequestQueue requestQueue = Volley.newRequestQueue(this);
-//            String URL = "http://10.0.2.2:8000/api/register";
-//            JSONObject jsonBody = new JSONObject();
-//            jsonBody.put("name", "henk");
-//            jsonBody.put("email", "henk@toptal.com");
-//            jsonBody.put("password", "henkhenk9191");
-//            jsonBody.put("password_confirmation", "henkhenk9191");
-//
-//
-//            final String requestBody = jsonBody.toString();
-//
-//            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-//                @Override
-//                public void onResponse(String response) {
-//                    Log.d("VOLLEY1", response);
-//                }
-//            }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    Log.d("VOLLEY2", error.toString());
-//                }
-//            }) {
-//                @Override
-//                public String getBodyContentType() {
-//                    return "application/json; charset=utf-8";
-//                }
-//
-//                @Override
-//                public byte[] getBody() throws AuthFailureError {
-//                    try {
-//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                    } catch (UnsupportedEncodingException uee) {
-//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-//                        return null;
-//                    }
-//                }
-//
-//                @Override
-//                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-//                    String responseString = "";
-//                    if (response != null) {
-//                        responseString = String.valueOf(response.statusCode);
-//                        // can get more details such as response.headers
-//                    }
-//                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-//                }
-//            };
-//            stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//            requestQueue.add(stringRequest);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+
+        final String url = "http://10.0.2.2:8000/api/campers";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("name", "Alim");
+                params.put("tentNumber", "2");
+                params.put("startingBalance", "10");
+                params.put("currentBalance", "8.3");
+                params.put("id", UUID.randomUUID().toString());
+
+
+
+                return params;
+            }
+        };
+//        queue.add(postRequest);
+        VolleySingleton.getInstance(this).addToQueue(postRequest);
     }
 }

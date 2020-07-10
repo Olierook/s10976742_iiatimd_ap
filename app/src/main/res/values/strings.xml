@@ -13,4 +13,8 @@
     <string name="tent5_button">Tent 5</string>
     <string name="tent6_button">Tent 6</string>
 
+    <string name="add_camper_txt">Voeg een deelnemer toe</string>
+    <string name="add_product_txt">Voeg een product toe</string>
+
+
 </resources>
