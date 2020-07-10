@@ -21,6 +21,7 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
 
     private String name;
     private Double balance;
+    private ViewGroup mContainer;
 //    private FragmentActivity myContext;
 
 
@@ -34,6 +35,8 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.store_row_view, container, false);
+        mContainer = container;
+        mContainer.setOnClickListener(this);
 
         return v;
     }
@@ -58,6 +61,6 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        Log.d("tag", "onClick: " + mContainer.getId());
     }
 }

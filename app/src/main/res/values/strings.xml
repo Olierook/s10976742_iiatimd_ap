@@ -15,6 +15,11 @@
 
     <string name="add_camper_txt">Voeg een deelnemer toe</string>
     <string name="add_product_txt">Voeg een product toe</string>
+    <string name="balancelabel">Start bedrag</string>
+    <string name="namelabel">Deelnemer naam</string>
+    <string name="add">Toevoegen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="add_header">Deelnemer toevoegen</string>
 
 
 </resources>

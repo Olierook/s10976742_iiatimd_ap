@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-        db.camperDao().insertAll(new Camper("henkk", 7, 20.0, 15.75));
-        String name = db.camperDao().getAll().get(0).getName();
+
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 //        ApiRequester apiRequester = new ApiRequester(getApplicationContext());

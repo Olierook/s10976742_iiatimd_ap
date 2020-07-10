@@ -1,6 +1,7 @@
 package com.example.lckvappjudanten;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,28 +44,20 @@ public class FooterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
         switch (v.getId()) {
             case R.id.people_view_button:
-                ft.add(R.id.placeholder2, new StoreRowFragment("Anton", 19.85));
+                startActivity(new Intent(getActivity(), CamperOverviewActivity.class));
                 break;
 
             case R.id.store_view_button:
-                ft.add(R.id.placeholder1, new StoreRowFragment("Henk", 19.85));
-                ft.add(R.id.placeholder3, new StoreRowFragment("Truus", 19.8));
-                ft.add(R.id.placeholder4, new StoreRowFragment("Sjaak", 19.0));
-
+                startActivity(new Intent(getActivity(), MainActivity.class));
                 break;
 
             case R.id.product_view_button:
-                ft.add(R.id.placeholder5, new StoreRowFragment("Erik", 420.69));
-                ft.add(R.id.placeholder6, new StoreRowFragment("Robbert", 0.01));
-
-//                startActivity(new Intent(this, ActivityToLaunch.class));
+                startActivity(new Intent(getActivity(), ProductOverviewActivity.class));
                 break;
 
         }
-        ft.commit();
 
     }
 }
