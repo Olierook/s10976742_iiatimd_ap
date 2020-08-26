@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 //        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
-        final String URL = "http://10.0.2.2:8000/api/campers";
+        final String URL = "https://sleepy-coast-31145.herokuapp.com/api/campers";
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        final String url = "http://10.0.2.2:8000/api/campers";
+        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {

@@ -9,6 +9,8 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,8 @@ public class AddCamperFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
        view.setOnClickListener(this);
+        FloatingActionButton addButton = (FloatingActionButton) getView().findViewById(R.id.add_camper_fab);
+        addButton.setOnClickListener(this);
     }
 
     @Override
