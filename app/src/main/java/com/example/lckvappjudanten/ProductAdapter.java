@@ -5,16 +5,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private String[] names;
-    private String[] prices;
+    private Product[] products;
 
-    public ProductAdapter(String[] names, String[] prices){
-        this.names = names;
-        this.prices = prices;
+    public ProductAdapter(Product[] products){
+        this.products = products;
+
     }
 
 
@@ -40,13 +43,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        holder.productName.setText(names[position]);
-        holder.productPrice.setText(prices[position]);
+        holder.productName.setText(products[position].getName());
+
+        NumberFormat df = DecimalFormat.getInstance();
+        df.setMinimumFractionDigits(2);
+        df.setMaximumFractionDigits(4);
+        df.setRoundingMode(RoundingMode.DOWN);
+        String price = "€" + df.format(products[position].getPrice());
+        holder.productPrice.setText(price);
     }
 
     @Override
     public int getItemCount() {
-        return names.length;
+        return products.length;
     }
 
 
