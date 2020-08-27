@@ -21,6 +21,7 @@ public class CustomDialog extends Dialog implements
         android.view.View.OnClickListener {
 
     private Context c;
+    private CamperOverviewActivity a;
     private String header;
     private String field1;
     private String field2;
@@ -30,11 +31,12 @@ public class CustomDialog extends Dialog implements
     private TextInputLayout mfield1;
     private EditText mfield2;
 
-    public CustomDialog(@NonNull Context c, String header, String field1, String field2
+    public CustomDialog(@NonNull Context c, CamperOverviewActivity a, String header, String field1, String field2
 //                        ,FragmentTransaction ft
     ) {
         super(c);
         this.c = c;
+        this.a = a;
         this.header = header;
         this.field1 = field1;
         this.field2 = field2;
@@ -75,6 +77,7 @@ public class CustomDialog extends Dialog implements
                         Double.parseDouble(String.valueOf(mfield2.getText())),
                         Double.parseDouble(String.valueOf(mfield2.getText()))
                 ));
+                a.populateStore();
                 String name = db.camperDao().getAll().get(0).getName();
 
 
