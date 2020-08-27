@@ -18,33 +18,23 @@ public class ProductOverviewActivity extends AppCompatActivity {
         productRecyclerview.hasFixedSize();
 
 
-        String[] names = new String[10];
-        String[] prices = new String[10];
+        Product[] products = new Product[10];
 
-        names[0] = "Chips";
-        names[1] = "Drop";
-        names[2] = "Bananensnoepje";
-        names[3] = "M&M's";
-        names[4] = "Skittles";
-        names[5] = "Apenkoppen";
-        names[6] = "Mars";
-        names[7] = "Snickers";
-        names[8] = "Water";
-        names[9] = "Frisdrank";
-
-        prices[0] = "€0.35";
-        prices[1] = "€0.08";
-        prices[2] = "€0.12";
-        prices[3] = "€0.47";
-        prices[4] = "€0.26";
-        prices[5] = "€0.21";
-        prices[6] = "€0.42";
-        prices[7] = "€0.42";
-        prices[8] = "€0.20";
-        prices[9] = "€0.70";
+        products[0] = new Product("Chips", 0.35);
+        products[1] = new Product("Drop", 0.08);
+        products[2] = new Product("Bananensnoepje", 0.12);
+        products[3] = new Product("M&M's", 0.47);
+        products[4] = new Product("Skittles", 0.26);
+        products[5] = new Product("Apenkoppen", 0.21);
+        products[6] = new Product("Mars", 0.42);
+        products[7] = new Product("Snickers", 0.42);
+        products[8] = new Product("Water", 0.20);
+        products[9] = new Product("Frisdrank", 0.70);
 
 
-        ProductAdapter productAdapter = new ProductAdapter(names, prices);
+
+
+        ProductAdapter productAdapter = new ProductAdapter(products);
         productRecyclerview.setAdapter(productAdapter);
     }
 }

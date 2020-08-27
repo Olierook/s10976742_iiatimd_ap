@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "920217468281",
+    "firebase_url": "https://cloudmessageiiatimd.firebaseio.com",
+    "project_id": "cloudmessageiiatimd",
+    "storage_bucket": "cloudmessageiiatimd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920217468281:android:0924db40fb6c473a93c3a8",
+        "android_client_info": {
+          "package_name": "com.example.lckvappjudanten"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920217468281-bn8vaeg0hjnhdqf2ud4n61la25l451ou.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqL8mOkhMoeCim03b5-iIV1XV1yEVZV1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920217468281-bn8vaeg0hjnhdqf2ud4n61la25l451ou.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
