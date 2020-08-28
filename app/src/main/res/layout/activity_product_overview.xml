@@ -23,4 +23,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout="@layout/footer_view" />
+
+    <fragment
+        android:id="@+id/action_bar"
+        android:name="com.example.lckvappjudanten.ActionBar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/action_bar_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

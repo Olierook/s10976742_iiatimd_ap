@@ -20,6 +20,8 @@
     <string name="add">Toevoegen</string>
     <string name="cancel">Annuleren</string>
     <string name="add_header">Deelnemer toevoegen</string>
+    <string name="title">LCKV App</string>
+    <string name="login">Inloggen</string>
 
 
 </resources>

@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+        final String url = "https://sleepy-coast-31145.herokuapp.com/api/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -122,11 +122,9 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("name", "Alim");
-                params.put("tentNumber", "2");
-                params.put("startingBalance", "10");
-                params.put("currentBalance", "8.3");
-                params.put("id", UUID.randomUUID().toString());
+//                params.put("name", "Robbert");
+                params.put("email", "robbert_olierook@hotmail.com");
+                params.put("password", "hallo123");
 
 
 
@@ -135,5 +133,42 @@ public class MainActivity extends AppCompatActivity {
         };
 //        queue.add(postRequest);
         VolleySingleton.getInstance(this).addToQueue(postRequest);
+
+//        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>()
+//                {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // response
+//                        Log.d("Response", response);
+//                    }
+//                },
+//                new Response.ErrorListener()
+//                {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // error
+//                        Log.d("Error.Response", error.toString());
+//                    }
+//                }
+//        ) {
+//            @Override
+//            protected Map<String, String> getParams()
+//            {
+//                Map<String, String>  params = new HashMap<String, String>();
+//                params.put("name", "Alim");
+//                params.put("tentNumber", "2");
+//                params.put("startingBalance", "10");
+//                params.put("currentBalance", "8.3");
+//                params.put("id", UUID.randomUUID().toString());
+//
+//
+//
+//                return params;
+//            }
+//        };
+////        queue.add(postRequest);
+//        VolleySingleton.getInstance(this).addToQueue(postRequest);
     }
 }
