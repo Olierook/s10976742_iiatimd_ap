@@ -40,14 +40,42 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
-                Log.i("FCM Token", token);
-//                saveToken(token);
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String token = instanceIdResult.getToken();
+//                Log.i("FCM Token", token);
+////                saveToken(token);
+//            }
+//        });
+
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+        Camper[] campers = db.camperDao().findByTentNumber(1);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        for (int i = 0; i < campers.length; i++){
+            if (i == 0) {
+                ft.replace(R.id.placeholder1, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
             }
-        });
+            if (i == 1) {
+                ft.replace(R.id.placeholder2, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+            }
+            if (i == 2) {
+                ft.replace(R.id.placeholder3, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+            }
+            if (i == 3) {
+                ft.replace(R.id.placeholder4, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+            }
+            if (i == 4) {
+                ft.replace(R.id.placeholder5, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+            }
+            if (i == 5) {
+                ft.replace(R.id.placeholder6, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+            }
+        }
+
+        ft.commit();
+
+
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 //        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
         final String URL = "https://sleepy-coast-31145.herokuapp.com/api/campers";
@@ -71,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+        final String url = "https://sleepy-coast-31145.herokuapp.com/api/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -94,11 +122,9 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("name", "Alim");
-                params.put("tentNumber", "2");
-                params.put("startingBalance", "10");
-                params.put("currentBalance", "8.3");
-                params.put("id", UUID.randomUUID().toString());
+//                params.put("name", "Robbert");
+                params.put("email", "robbert_olierook@hotmail.com");
+                params.put("password", "hallo123");
 
 
 
@@ -107,5 +133,42 @@ public class MainActivity extends AppCompatActivity {
         };
 //        queue.add(postRequest);
         VolleySingleton.getInstance(this).addToQueue(postRequest);
+
+//        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>()
+//                {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // response
+//                        Log.d("Response", response);
+//                    }
+//                },
+//                new Response.ErrorListener()
+//                {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // error
+//                        Log.d("Error.Response", error.toString());
+//                    }
+//                }
+//        ) {
+//            @Override
+//            protected Map<String, String> getParams()
+//            {
+//                Map<String, String>  params = new HashMap<String, String>();
+//                params.put("name", "Alim");
+//                params.put("tentNumber", "2");
+//                params.put("startingBalance", "10");
+//                params.put("currentBalance", "8.3");
+//                params.put("id", UUID.randomUUID().toString());
+//
+//
+//
+//                return params;
+//            }
+//        };
+////        queue.add(postRequest);
+//        VolleySingleton.getInstance(this).addToQueue(postRequest);
     }
 }
