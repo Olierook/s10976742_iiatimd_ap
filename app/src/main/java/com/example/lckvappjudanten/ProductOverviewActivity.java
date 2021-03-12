@@ -31,9 +31,6 @@ public class ProductOverviewActivity extends AppCompatActivity {
         products[8] = new Product("Water", 0.20);
         products[9] = new Product("Frisdrank", 0.70);
 
-
-
-
         ProductAdapter productAdapter = new ProductAdapter(products);
         productRecyclerview.setAdapter(productAdapter);
     }
