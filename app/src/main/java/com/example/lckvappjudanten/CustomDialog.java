@@ -70,15 +70,15 @@ public class CustomDialog extends Dialog implements
                  dismiss();
                 break;
             case R.id.add_button:
-                AppDatabase db = AppDatabase.getInstance(c);
-                db.camperDao().insertAll(new Camper(
-                        String.valueOf(mfield1.getEditText().getText()),
-                        1,
-                        Double.parseDouble(String.valueOf(mfield2.getText())),
-                        Double.parseDouble(String.valueOf(mfield2.getText()))
-                ));
-                a.populateStore();
-                String name = db.camperDao().getAll().get(0).getName();
+//                AppDatabase db = AppDatabase.getInstance(c);
+//                db.camperDao().insertAll(new Camper(
+//                        String.valueOf(mfield1.getEditText().getText()),
+//                        1,
+//                        Double.parseDouble(String.valueOf(mfield2.getText())),
+//                        Double.parseDouble(String.valueOf(mfield2.getText()))
+//                ));
+//                a.populateStore();
+//                String name = db.camperDao().getAll().get(0).getName();
 
 
 

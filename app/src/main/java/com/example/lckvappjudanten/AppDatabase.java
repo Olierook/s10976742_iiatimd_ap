@@ -6,9 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = Camper.class, version = 4)
+@Database(entities = Product.class, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract CamperDao camperDao();
+    public abstract ProductDao productDao();
+//    public abstract CamperDao camperDao();
+
 
     private static AppDatabase instance;
 
@@ -20,6 +22,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static AppDatabase create (final Context context){
-        return Room.databaseBuilder(context, AppDatabase.class, "campers_and_products").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        return Room.databaseBuilder(context, AppDatabase.class, "products").allowMainThreadQueries().fallbackToDestructiveMigration().build();
     }
 }

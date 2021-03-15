@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRecyclerView"
+        android:layout_width="409dp"
+        android:layout_height="510dp"
+        app:layout_constraintBottom_toTopOf="@+id/footer_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <fragment
         android:id="@+id/footer_fragment"
         android:name="com.example.lckvappjudanten.FooterFragment"
@@ -16,17 +25,6 @@
         tools:layout="@layout/footer_view" />
 
     <fragment
-        android:id="@+id/product_recycler"
-        android:name="com.example.lckvappjudanten.ProductRecyclerFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/footer_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addProductButton"
-        tools:layout="@layout/product_recycler_view" />
-
-    <fragment
         android:id="@+id/action_bar"
         android:name="com.example.lckvappjudanten.ActionBar"
         android:layout_width="0dp"
@@ -35,15 +33,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/action_bar_view" />
-
-    <Button
-        android:id="@+id/addProductButton"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorPrimaryLight"
-        android:text="@string/add_product_txt"
-        android:textColor="@color/cardview_light_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/action_bar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
