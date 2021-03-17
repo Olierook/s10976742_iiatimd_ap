@@ -46,25 +46,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeSale() {
+        ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
+        Boolean loggedIn = apiRequester.isLoggedIn();
+        int uid = 1;
+        if (loggedIn) {
+            uid = apiRequester.getUserId();
+        }
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+        Camper camper = db.camperDao().getCamper(selectedCamperId)[0];
+        Double newBalance = camper.getCurrentBalance() - selectedProductPrice;
+        db.camperDao().makeSale(newBalance, selectedCamperId);
+        populateStore();
         Log.d("sale", "makeSale: " + selectedCamperId + " " + selectedProductPrice);
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-//        pdd = new ProductDialog(this);
-
-//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
-//            @Override
-//            public void onSuccess(InstanceIdResult instanceIdResult) {
-//                String token = instanceIdResult.getToken();
-//                Log.i("FCM Token", token);
-////                saveToken(token);
-//            }
-//        });
-
+    public void populateStore () {
         ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
         Boolean loggedIn = apiRequester.isLoggedIn();
         int uid = 1;
@@ -74,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         Camper[] campers = db.camperDao().findByUserId(uid);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        for (int i = 0; i < campers.length; i++){
+        for (int i = 0; i < campers.length; i++) {
             StoreRowFragment storeRowFragment = new StoreRowFragment(
                     this,
                     campers[i].getName(),
@@ -101,6 +97,28 @@ public class MainActivity extends AppCompatActivity {
                     ft.replace(R.id.placeholder6, storeRowFragment);
                     break;
             }
+        }
+        ft.commit();
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        populateStore();
+//        pdd = new ProductDialog(this);
+
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String token = instanceIdResult.getToken();
+//                Log.i("FCM Token", token);
+////                saveToken(token);
+//            }
+//        });
+
+
 
 //            if (i == 0) {
 //                ft.replace(R.id.placeholder1, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product voor " + campers[i].getName(), campers[i].getId())));
@@ -122,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
         }
 
-        ft.commit();
 
 
 //        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
@@ -228,5 +245,5 @@ public class MainActivity extends AppCompatActivity {
 //        };
 ////        queue.add(postRequest);
 //        VolleySingleton.getInstance(this).addToQueue(postRequest);
-    }
+//    }
 }

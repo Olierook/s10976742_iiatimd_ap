@@ -23,7 +23,7 @@ public interface CamperDao {
     Camper[] getCamper(String id);
 
     @Query("UPDATE camper SET currentBalance = :newBalance WHERE id LIKE :id")
-    void makeSale(int newBalance, String id);
+    void makeSale(Double newBalance, String id);
 
     @Query("DELETE FROM camper WHERE user_id LIKE :uid")
     void deleteAll(int uid);
