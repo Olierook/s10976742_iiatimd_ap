@@ -1,5 +1,7 @@
 package com.example.lckvappjudanten;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,28 +17,42 @@ import androidx.fragment.app.Fragment;
 public class ActionBar extends Fragment
         implements View.OnClickListener
 {
+    private static Context c;
+    private static View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.action_bar_view, container, false);
-        return v ;
+        return inflater.inflate(R.layout.action_bar_view, container, false);
 
+    }
+    public static void textSetter() {
+        Button login = v.findViewById(R.id.login_button);
+        if(ApiRequester.getInstance(c).isLoggedIn()) {
+            login.setText("Uitloggen");
+        } else {
+            login.setText("Inloggen");
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button login = view.findViewById(R.id.login_button);
+        v = getView();
+        c = getContext();
+        Button login = v.findViewById(R.id.login_button);
+        textSetter();
         login.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View v) {
-
-        CustomDialog cdd=new CustomDialog(this.getContext(), (CamperOverviewActivity) getActivity(), "Inloggen", "Gebruikersnaam", "Wachtwoord");
-        cdd.show();
-
-
+        if(ApiRequester.getInstance(getContext()).isLoggedIn()) {
+            ApiRequester.getInstance(getContext()).logout();
+        } else {
+            LoginDialog ldd = new LoginDialog(this.getContext(), getActivity());
+            ldd.show();
+        }
     }
 
 }

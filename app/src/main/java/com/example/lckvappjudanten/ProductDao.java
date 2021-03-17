@@ -11,7 +11,7 @@ import androidx.room.Query;
 public interface ProductDao {
 
     @Query("SELECT * FROM product")
-    List<Product> getAll();
+    Product[] getAll();
 
 //    @Query("SELECT * FROM camper WHERE uuid IN (:userIds)")
 //    List<Camper> loadAllByIds(int[] userIds);

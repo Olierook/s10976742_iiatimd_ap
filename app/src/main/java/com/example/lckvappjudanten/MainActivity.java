@@ -34,11 +34,27 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    private String selectedCamperId;
+    private Double selectedProductPrice;
+
+    public void setSelectedCamperId(String selectedCamperId) {
+        this.selectedCamperId = selectedCamperId;
+    }
+
+    public void setSelectedProductPrice(Double selectedProductPrice) {
+        this.selectedProductPrice = selectedProductPrice;
+    }
+
+    public void makeSale() {
+        Log.d("sale", "makeSale: " + selectedCamperId + " " + selectedProductPrice);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        pdd = new ProductDialog(this);
 
 //        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
 //            @Override
@@ -49,90 +65,132 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+        ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
+        Boolean loggedIn = apiRequester.isLoggedIn();
+        int uid = 1;
+        if (loggedIn) {
+            uid = apiRequester.getUserId();
+        }
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-//        Camper[] campers = db.camperDao().findByTentNumber(1);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        for (int i = 0; i < campers.length; i++){
+        Camper[] campers = db.camperDao().findByUserId(uid);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        for (int i = 0; i < campers.length; i++){
+            StoreRowFragment storeRowFragment = new StoreRowFragment(
+                    this,
+                    campers[i].getName(),
+                    campers[i].getCurrentBalance(),
+                    campers[i].getId()
+            );
+            switch (i) {
+                case 0:
+                    ft.replace(R.id.placeholder1, storeRowFragment);
+                    break;
+                case 1:
+                    ft.replace(R.id.placeholder2, storeRowFragment);
+                    break;
+                case 2:
+                    ft.replace(R.id.placeholder3, storeRowFragment);
+                    break;
+                case 3:
+                    ft.replace(R.id.placeholder4, storeRowFragment);
+                    break;
+                case 4:
+                    ft.replace(R.id.placeholder5, storeRowFragment);
+                    break;
+                case 5:
+                    ft.replace(R.id.placeholder6, storeRowFragment);
+                    break;
+            }
+
 //            if (i == 0) {
-//                ft.replace(R.id.placeholder1, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder1, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product voor " + campers[i].getName(), campers[i].getId())));
 //            }
 //            if (i == 1) {
-//                ft.replace(R.id.placeholder2, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder2, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product voor " + campers[i].getName(), campers[i].getId())));
 //            }
 //            if (i == 2) {
-//                ft.replace(R.id.placeholder3, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder3, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product verkopen", campers[i].getId())));
 //            }
 //            if (i == 3) {
-//                ft.replace(R.id.placeholder4, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder4, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product verkopen", campers[i].getId())));
 //            }
 //            if (i == 4) {
-//                ft.replace(R.id.placeholder5, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder5, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product verkopen", campers[i].getId())));
 //            }
 //            if (i == 5) {
-//                ft.replace(R.id.placeholder6, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+//                ft.replace(R.id.placeholder6, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance(), new ProductDialog(getApplicationContext(), this, "Product verkopen", campers[i].getId())));
 //            }
-//        }
-//
-//        ft.commit();
+        }
+
+        ft.commit();
 
 
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 //        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
-        final String URL = "https://sleepy-coast-31145.herokuapp.com/api/campers";
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
-                (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+//        apiRequester.login("henk8@henk.nl", "wacht123");
 
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            Log.d("hoi", response.getJSONObject(0).getString("name"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+//        final String URL = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+//        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+//                (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+//
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//                        try {
+//                            Log.d("hoi", response.getJSONObject(0).getString("name"));
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // TODO: Handle error
+//
+//                    }
+//                });
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-        final String url = "https://sleepy-coast-31145.herokuapp.com/api/login";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", error.toString());
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<String, String>();
+//        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
+//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>()
+//                {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // response
+//                        Log.d("Response", response);
+//                    }
+//                },
+//                new Response.ErrorListener()
+//                {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // error
+//                        Log.d("Error.Response", error.toString());
+//                    }
+//                }
+//        ) {
+//            @Override
+//            protected Map<String, String> getParams()
+//            {
+//                Map<String, String>  params = new HashMap<String, String>();
 //                params.put("name", "Robbert");
-                params.put("email", "robbert_olierook@hotmail.com");
-                params.put("password", "hallo123");
-
-
-
-                return params;
-            }
-        };
-//        queue.add(postRequest);
-        VolleySingleton.getInstance(this).addToQueue(postRequest);
+////                params.put("email", "robbert2_olierook@hotmail.com");
+////                params.put("password", "hallo123");
+//                params.put("startingBalance", "19.87");
+//                params.put("currentBalance", "19.87");
+//                params.put("user_id", "34");
+//                params.put("id", UUID.randomUUID().toString());
+//
+//                return params;
+//            }
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<String, String>();
+//                params.put("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9zbGVlcHktY29hc3QtMzExNDUuaGVyb2t1YXBwLmNvbVwvYXBpXC9yZWdpc3RlciIsImlhdCI6MTYxNTgwNDkxNCwiZXhwIjoxNjE1ODA4NTE0LCJuYmYiOjE2MTU4MDQ5MTQsImp0aSI6Ik5pUHBsbFZXSkR0ekY5VTQiLCJzdWIiOjM0LCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.hZcKDcBJ_hhKuSNXU2vVIiINidT_eav8F0Pko1yKNiQ");
+//                return params;
+//            }
+//        };
+////        queue.add(postRequest);
+//        VolleySingleton.getInstance(this).addToQueue(postRequest);
 
 //        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
 //        StringRequest postRequest = new StringRequest(Request.Method.POST, url,

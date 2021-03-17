@@ -14,21 +14,22 @@ public class Camper {
     @ColumnInfo
     private String name;
     @ColumnInfo
-    private int tentNumber;
+    private int user_id;
     @ColumnInfo
     private Double startingBalance;
     @ColumnInfo
     private Double currentBalance;
     @NonNull
     @PrimaryKey
-    private String uuid = UUID.randomUUID().toString();
+    private String id;
 
 
-    public Camper(String name, int tentNumber, Double startingBalance, Double currentBalance) {
+    public Camper(String name, int user_id, Double startingBalance, Double currentBalance) {
         this.name = name;
-        this.tentNumber = tentNumber;
         this.startingBalance = startingBalance;
+        this.user_id = user_id;
         this.currentBalance = currentBalance;
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getName() {
@@ -37,14 +38,6 @@ public class Camper {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getTentNumber() {
-        return tentNumber;
-    }
-
-    public void setTentNumber(int tentNumber) {
-        this.tentNumber = tentNumber;
     }
 
     public Double getStartingBalance() {
@@ -63,12 +56,20 @@ public class Camper {
         this.currentBalance = currentBalance;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
 }

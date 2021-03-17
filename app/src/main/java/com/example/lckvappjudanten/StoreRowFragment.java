@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -21,13 +23,18 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
 
     private String name;
     private Double balance;
+    private String camperId;
     private ViewGroup mContainer;
+    private MainActivity a;
+
 //    private FragmentActivity myContext;
 
 
-    public StoreRowFragment(String name, Double balance) {
+    public StoreRowFragment(MainActivity a, String name, Double balance, String camperId) {
+        this.a = a;
         this.name = name;
         this.balance = balance;
+        this.camperId = camperId;
     }
 
 
@@ -44,6 +51,8 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
         TextView store_name = (TextView) getView().findViewById(R.id.store_name);
         TextView store_balance = (TextView) getView().findViewById(R.id.store_balance);
+        FloatingActionButton addButton = (FloatingActionButton) getView().findViewById(R.id.add_camper_fab);
+        addButton.setOnClickListener(this);
         store_name.setText(this.name);
         NumberFormat df = DecimalFormat.getInstance();
         df.setMinimumFractionDigits(2);
@@ -61,6 +70,10 @@ public class StoreRowFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.d("tag", "onClick: " + mContainer.getId());
+        ProductDialog pdd=new ProductDialog(this.getContext(), getActivity(), "Product voor " + name);
+        pdd.setHeader("Product voor " + name);
+        a.setSelectedCamperId(camperId);
+
+        pdd.show();
     }
 }
