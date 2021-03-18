@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -36,6 +38,19 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private String selectedCamperId;
     private Double selectedProductPrice;
+    static boolean active = false;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
 
     public void setSelectedCamperId(String selectedCamperId) {
         this.selectedCamperId = selectedCamperId;
@@ -47,32 +62,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void makeSale() {
         ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
-        Boolean loggedIn = apiRequester.isLoggedIn();
-        int uid = 1;
-        if (loggedIn) {
-            uid = apiRequester.getUserId();
-        }
+        int uid = apiRequester.getUserId();
+
+//        Boolean loggedIn = apiRequester.isLoggedIn();
+//        int uid = 1;
+//        if (loggedIn) {
+//            uid = apiRequester.getUserId();
+//        }
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         Camper camper = db.camperDao().getCamper(selectedCamperId)[0];
         Double newBalance = camper.getCurrentBalance() - selectedProductPrice;
         db.camperDao().makeSale(newBalance, selectedCamperId);
-        populateStore();
+        populateStore(this);
         Log.d("sale", "makeSale: " + selectedCamperId + " " + selectedProductPrice);
     }
 
-    public void populateStore () {
-        ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
-        Boolean loggedIn = apiRequester.isLoggedIn();
-        int uid = 1;
-        if (loggedIn) {
-            uid = apiRequester.getUserId();
-        }
-        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+    public static void populateStore (Context c) {
+        ApiRequester apiRequester = ApiRequester.getInstance(c.getApplicationContext());
+        int uid = apiRequester.getUserId();
+
+//        Boolean loggedIn = apiRequester.isLoggedIn();
+//        int uid = 1;
+//        if (loggedIn) {
+//            uid = apiRequester.getUserId();
+//        }
+        AppDatabase db = AppDatabase.getInstance(c.getApplicationContext());
         Camper[] campers = db.camperDao().findByUserId(uid);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = ((MainActivity) c).getSupportFragmentManager().beginTransaction();
         for (int i = 0; i < campers.length; i++) {
             StoreRowFragment storeRowFragment = new StoreRowFragment(
-                    this,
+                    (MainActivity) c,
                     campers[i].getName(),
                     campers[i].getCurrentBalance(),
                     campers[i].getId()
@@ -106,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        populateStore();
+        ApiRequester.getInstance(getApplicationContext()).syncUserId();
+        populateStore(this);
 //        pdd = new ProductDialog(this);
 
 //        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {

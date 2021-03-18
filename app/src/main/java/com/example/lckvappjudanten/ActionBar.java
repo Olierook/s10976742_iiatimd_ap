@@ -28,10 +28,17 @@ public class ActionBar extends Fragment
     }
     public static void textSetter() {
         Button login = v.findViewById(R.id.login_button);
-        if(ApiRequester.getInstance(c).isLoggedIn()) {
+        Button upload = v.findViewById(R.id.upload_button);
+        Button download = v.findViewById(R.id.download_button);
+        if(ApiRequester.getInstance(c).getUserId() > 1) {
             login.setText("Uitloggen");
+            upload.setVisibility(View.VISIBLE);
+            download.setVisibility(View.VISIBLE);
+
         } else {
             login.setText("Inloggen");
+            upload.setVisibility(View.GONE);
+            download.setVisibility(View.GONE);
         }
     }
 
@@ -39,20 +46,36 @@ public class ActionBar extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         v = getView();
         c = getContext();
-        Button login = v.findViewById(R.id.login_button);
         textSetter();
+        Button login = v.findViewById(R.id.login_button);
+        Button upload = v.findViewById(R.id.upload_button);
+        Button download = v.findViewById(R.id.download_button);
         login.setOnClickListener(this);
+//        upload.setOnClickListener(this);
+//        download.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
-        if(ApiRequester.getInstance(getContext()).isLoggedIn()) {
-            ApiRequester.getInstance(getContext()).logout();
-        } else {
-            LoginDialog ldd = new LoginDialog(this.getContext(), getActivity());
-            ldd.show();
+        ApiRequester apiRequester = ApiRequester.getInstance(getContext());
+        switch (v.getId()) {
+            case R.id.login_button:
+                if(apiRequester.getUserId() > 1) {
+                    apiRequester.logout();
+                } else {
+                    LoginDialog ldd = new LoginDialog(getContext(), getActivity());
+                    ldd.show();
+                }
+                break;
+            case R.id.download_button:
+                apiRequester.downloadCampers();
+                break;
+            case R.id.upload_button:
+                apiRequester.uploadCampers();
+                break;
         }
+
     }
 
 }

@@ -37,7 +37,7 @@ public class AddCamperFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        CustomDialog cdd=new CustomDialog(this.getContext(), (CamperOverviewActivity) getActivity(), "Deelnemer toevegen", "Naam deelnemer", "Startbedrag");
+        CustomDialog cdd=new CustomDialog(this.getContext(), (CamperOverviewActivity) getActivity(), "Deelnemer toevoegen", "Naam deelnemer", "Startbedrag");
         cdd.show();
 
 

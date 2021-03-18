@@ -74,15 +74,21 @@ public class CustomDialog extends Dialog implements
                 break;
             case R.id.add_button:
                 AppDatabase db = AppDatabase.getInstance(c);
+                ApiRequester apiRequester = ApiRequester.getInstance(c);
+                int uid = 1;
+                if (apiRequester.isLoggedIn()){
+                    uid = apiRequester.getUserId();
+                }
+                Log.d("beforeIf", "onClick: " + header);
                 if (header == "Deelnemer toevoegen") {
+                    Log.d("inIf", "onClick: " + header);
                     db.camperDao().insertAll(new Camper(
                             String.valueOf(mfield1.getEditText().getText()),
-                            1,
+                            uid,
                             Double.parseDouble(String.valueOf(mfield2.getText())),
                             Double.parseDouble(String.valueOf(mfield2.getText()))
                     ));
-                    ((CamperOverviewActivity) a).populateStore();
-                    break;
+                    ((CamperOverviewActivity) a).populateStore(c);
                 } else {
                     db.productDao().insertAll(new Product(
                             String.valueOf(mfield1.getEditText().getText()),
@@ -94,6 +100,7 @@ public class CustomDialog extends Dialog implements
                         ((ProductRecyclerFragment) recycler).productAdded();
                     }
                 };
+                break;
             default:
                 break;
         }
