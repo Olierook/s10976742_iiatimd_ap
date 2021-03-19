@@ -15,7 +15,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
 
 public class ApiRequester {
     private static ApiRequester apiRequester = null;
@@ -46,6 +47,14 @@ public class ApiRequester {
     private void setUserId(int userId) {
         this.userId = userId;
         ActionBar.textSetter();
+    }
+    private void repopulate() {
+        if(MainActivity.active) {
+            MainActivity.populateStore(context);
+        }
+        if(CamperOverviewActivity.active) {
+            CamperOverviewActivity.populateStore(context);
+        }
     }
     public int getUserId() {
         return userId;
@@ -79,6 +88,7 @@ public class ApiRequester {
                             Log.d("finalize", "onResponse: here");
                             JSONObject jobj = new JSONObject(response);
                             setUserId(jobj.getInt("id"));
+                            repopulate();
                             AppDatabase db = AppDatabase.getInstance(context);
                             if(db.activeUserDao().getAll().length > 0){
                                 db.activeUserDao().delete(
@@ -102,7 +112,7 @@ public class ApiRequester {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showLoginFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -143,7 +153,7 @@ public class ApiRequester {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showLoginFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -187,7 +197,7 @@ public class ApiRequester {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showLoginFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -218,12 +228,13 @@ public class ApiRequester {
                             // response
                             setBearerToken(null);
                             setUserId(1);
+                            repopulate();
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // error
+                            setUserId(1);
                             Log.d("Error.Response", error.toString());
                         }
                     }
@@ -236,6 +247,9 @@ public class ApiRequester {
                 }
             };
             VolleySingleton.getInstance(context).addToQueue(postRequest);
+        } else {
+            setUserId(1);
+            repopulate();
         }
     }
 
@@ -262,7 +276,7 @@ public class ApiRequester {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // error
+                            ActionBar.showUploadFail();
                             Log.d("Error.Response", error.toString());
                         }
                     }
@@ -297,7 +311,7 @@ public class ApiRequester {
             final String currentBalance = camper.getCurrentBalance().toString();
             final String id = camper.getId();
 
-            final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers" + id;
+            final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers/" + id;
             StringRequest postRequest = new StringRequest(Request.Method.PUT, url,
                     new Response.Listener<String>() {
                         @Override
@@ -309,7 +323,7 @@ public class ApiRequester {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // error
+                            ActionBar.showUploadFail();
                             Log.d("Error.Response", error.toString());
                         }
                     }
@@ -339,7 +353,7 @@ public class ApiRequester {
     public void removeOriginCamper(String id) {
         if (isLoggedIn()) {
 
-            final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers" + id;
+            final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers/" + id;
             StringRequest postRequest = new StringRequest(Request.Method.DELETE, url,
                     new Response.Listener<String>() {
                         @Override
@@ -351,7 +365,7 @@ public class ApiRequester {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // error
+                            ActionBar.showUploadFail();
                             Log.d("Error.Response", error.toString());
                         }
                     }
@@ -371,8 +385,11 @@ public class ApiRequester {
     public void uploadCampers() {
         if (!isLoggedIn()) {
             uploadWithLogin();
+            Log.d(TAG, "uploadCampers: if");
         } else {
             replaceOriginCampers();
+            Log.d(TAG, "uploadCampers: else");
+
         }
     }
 
@@ -400,8 +417,10 @@ public class ApiRequester {
                         try {
                             JSONObject jobj = new JSONObject(response);
                             setBearerToken("Bearer " + jobj.getString("access_token"));
+                            Log.d(TAG, "uploadCampers: " + bearerToken);
                             replaceOriginCampers();
                         } catch (JSONException e) {
+                            ActionBar.showUploadFail();
                             e.printStackTrace();
                         }
                     }
@@ -410,7 +429,7 @@ public class ApiRequester {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showUploadFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -447,6 +466,7 @@ public class ApiRequester {
                             setBearerToken("Bearer " + jobj.getString("access_token"));
                             replaceLocalCampers();
                         } catch (JSONException e) {
+                            ActionBar.showDownloadFail();
                             e.printStackTrace();
                         }
                     }
@@ -455,7 +475,7 @@ public class ApiRequester {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showDownloadFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -484,8 +504,17 @@ public class ApiRequester {
                         // response
                         Log.d("Response", response);
                         try {
+                            Log.d(TAG, "onResponse: replace");
                             AppDatabase db = AppDatabase.getInstance(context);
-                            JSONArray jarr = new JSONArray(response);
+                            JSONArray jarr;
+                            try {
+                                JSONObject jobj = new JSONObject(response);
+                                jarr = jobj.toJSONArray(jobj.names());
+                            } catch (JSONException e) {
+                                jarr = new JSONArray(response);
+                            }
+                            Log.d(TAG, "onResponse: array from");
+
                             Camper[] localCampers = db.camperDao().findByUserId(userId);
                             for (int i = 0; i < jarr.length(); i++) {
                                 String id = jarr.getJSONObject(i).getString("id");
@@ -519,10 +548,11 @@ public class ApiRequester {
                                     addOriginCamper(localCampers[i]);
                                 }
                             }
-
+                            ActionBar.showUploadSuccess();
 
 
                         } catch (JSONException e) {
+                            ActionBar.showUploadFail();
                             e.printStackTrace();
                         }
                     }
@@ -530,7 +560,7 @@ public class ApiRequester {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showUploadFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }
@@ -556,7 +586,13 @@ public class ApiRequester {
                         // response
                         Log.d("Response", response);
                         try {
-                            JSONArray jarr = new JSONArray(response);
+                            JSONArray jarr;
+                            try {
+                                JSONObject jobj = new JSONObject(response);
+                                jarr = jobj.toJSONArray(jobj.names());
+                            } catch (JSONException e) {
+                                jarr = new JSONArray(response);
+                            }
                             AppDatabase db = AppDatabase.getInstance(context);
                             db.camperDao().deleteAll(userId);
                             for (int i = 0; i < jarr.length(); i++) {
@@ -575,7 +611,9 @@ public class ApiRequester {
                             if(CamperOverviewActivity.active) {
                                 CamperOverviewActivity.populateStore(context);
                             }
+                            ActionBar.showDownloadSuccess();
                         } catch (JSONException e) {
+                            ActionBar.showDownloadFail();
                             e.printStackTrace();
                         }
                     }
@@ -583,7 +621,7 @@ public class ApiRequester {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
+                        ActionBar.showDownloadFail();
                         Log.d("Error.Response", error.toString());
                     }
                 }

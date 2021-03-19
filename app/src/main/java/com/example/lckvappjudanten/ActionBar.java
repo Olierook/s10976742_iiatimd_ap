@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.room.ColumnInfo;
 
 public class ActionBar extends Fragment
         implements View.OnClickListener
@@ -42,6 +44,30 @@ public class ActionBar extends Fragment
         }
     }
 
+    public static void showDownloadSuccess(){
+        Snackbar snackbar = Snackbar.make(v,  "Data van de server is gedownload!", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    public static void showUploadSuccess(){
+        Snackbar snackbar = Snackbar.make(v,  "Data is naar de server geupload!", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    public static void showDownloadFail(){
+        Snackbar snackbar = Snackbar.make(v,  "Downloaden is niet gelukt..", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    public static void showUploadFail(){
+        Snackbar snackbar = Snackbar.make(v,  "Uploaden is niet gelukt..", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+    public static void showLoginFail(){
+        Snackbar snackbar = Snackbar.make(v,  "Inloggen is niet gelukt..", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         v = getView();
@@ -51,8 +77,8 @@ public class ActionBar extends Fragment
         Button upload = v.findViewById(R.id.upload_button);
         Button download = v.findViewById(R.id.download_button);
         login.setOnClickListener(this);
-//        upload.setOnClickListener(this);
-//        download.setOnClickListener(this);
+        upload.setOnClickListener(this);
+        download.setOnClickListener(this);
     }
 
 

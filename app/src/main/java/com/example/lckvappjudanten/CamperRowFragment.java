@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -19,15 +21,13 @@ import androidx.fragment.app.FragmentActivity;
 
 public class CamperRowFragment extends Fragment implements View.OnClickListener {
 
-    private String name;
-    private Double balance;
-    private ViewGroup mContainer;
+    private Camper camper;
+
 //    private FragmentActivity myContext;
 
 
-    public CamperRowFragment(String name, Double balance) {
-        this.name = name;
-        this.balance = balance;
+    public CamperRowFragment(Camper camper) {
+        this.camper = camper;
     }
 
 
@@ -35,8 +35,6 @@ public class CamperRowFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.camper_row_view, container, false);
-        mContainer = container;
-        mContainer.setOnClickListener(this);
 
         return v;
     }
@@ -44,12 +42,14 @@ public class CamperRowFragment extends Fragment implements View.OnClickListener 
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
         TextView store_name = (TextView) getView().findViewById(R.id.store_name);
         TextView store_balance = (TextView) getView().findViewById(R.id.store_balance);
-        store_name.setText(this.name);
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.add_camper_fab);
+        fab.setOnClickListener(this);
+        store_name.setText(this.camper.getName());
         NumberFormat df = DecimalFormat.getInstance();
         df.setMinimumFractionDigits(2);
         df.setMaximumFractionDigits(4);
         df.setRoundingMode(RoundingMode.DOWN);
-        String new_balance = "€" + df.format(this.balance);
+        String new_balance = "€" + df.format(this.camper.getCurrentBalance()) + "/€" + df.format(this.camper.getStartingBalance());
         store_balance.setText(new_balance);
     }
 
@@ -61,6 +61,7 @@ public class CamperRowFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Log.d("tag", "onClick: " + mContainer.getId());
+        AppDatabase.getInstance(getContext()).camperDao().delete(camper);
+        CamperOverviewActivity.populateStore(getContext());
     }
 }

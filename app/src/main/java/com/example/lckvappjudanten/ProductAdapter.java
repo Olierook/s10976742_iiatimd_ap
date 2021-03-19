@@ -9,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -59,8 +61,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Snackbar snackbar = Snackbar.make(v, products[position].getName() + " verkocht!", Snackbar.LENGTH_SHORT);
                     ((MainActivity) a).setSelectedProductPrice(products[position].getPrice());
                     ((MainActivity) a).makeSale();
+                    snackbar.show();
                 }
             });
         };

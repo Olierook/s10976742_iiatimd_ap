@@ -75,10 +75,7 @@ public class CustomDialog extends Dialog implements
             case R.id.add_button:
                 AppDatabase db = AppDatabase.getInstance(c);
                 ApiRequester apiRequester = ApiRequester.getInstance(c);
-                int uid = 1;
-                if (apiRequester.isLoggedIn()){
-                    uid = apiRequester.getUserId();
-                }
+                int uid = apiRequester.getUserId();
                 Log.d("beforeIf", "onClick: " + header);
                 if (header == "Deelnemer toevoegen") {
                     Log.d("inIf", "onClick: " + header);

@@ -56,22 +56,22 @@ public class CamperOverviewActivity extends AppCompatActivity {
         FragmentTransaction ft = ((CamperOverviewActivity) c).getSupportFragmentManager().beginTransaction();
         for (int i = 0; i < campers.length; i++){
             if (i == 0) {
-                ft.replace(R.id.placeholder_container1, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholder_container1, new CamperRowFragment(campers[i]));
             }
             if (i == 1) {
-                ft.replace(R.id.placeholder_container2, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholder_container2, new CamperRowFragment(campers[i]));
             }
             if (i == 2) {
-                ft.replace(R.id.placeholder_container3, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholder_container3, new CamperRowFragment(campers[i]));
             }
             if (i == 3) {
-                ft.replace(R.id.placeholde_container4, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholde_container4, new CamperRowFragment(campers[i]));
             }
             if (i == 4) {
-                ft.replace(R.id.placeholder_container5, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholder_container5, new CamperRowFragment(campers[i]));
             }
             if (i == 5) {
-                ft.replace(R.id.placeholder_container6, new CamperRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+                ft.replace(R.id.placeholder_container6, new CamperRowFragment(campers[i]));
             }
         }
         for (int i = campers.length; i <= 6 ; i++) {
