@@ -1,5 +1,6 @@
 package com.example.lckvappjudanten;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -21,7 +24,7 @@ public class CustomDialog extends Dialog implements
         android.view.View.OnClickListener {
 
     private Context c;
-    private CamperOverviewActivity a;
+    private Activity a;
     private String header;
     private String field1;
     private String field2;
@@ -31,7 +34,7 @@ public class CustomDialog extends Dialog implements
     private TextInputLayout mfield1;
     private EditText mfield2;
 
-    public CustomDialog(@NonNull Context c, CamperOverviewActivity a, String header, String field1, String field2
+    public CustomDialog(@NonNull Context c, Activity a, String header, String field1, String field2
 //                        ,FragmentTransaction ft
     ) {
         super(c);
@@ -71,17 +74,29 @@ public class CustomDialog extends Dialog implements
                 break;
             case R.id.add_button:
                 AppDatabase db = AppDatabase.getInstance(c);
-                db.camperDao().insertAll(new Camper(
-                        String.valueOf(mfield1.getEditText().getText()),
-                        1,
-                        Double.parseDouble(String.valueOf(mfield2.getText())),
-                        Double.parseDouble(String.valueOf(mfield2.getText()))
-                ));
-                a.populateStore();
-                String name = db.camperDao().getAll().get(0).getName();
-
-
-
+                ApiRequester apiRequester = ApiRequester.getInstance(c);
+                int uid = apiRequester.getUserId();
+                Log.d("beforeIf", "onClick: " + header);
+                if (header == "Deelnemer toevoegen") {
+                    Log.d("inIf", "onClick: " + header);
+                    db.camperDao().insertAll(new Camper(
+                            String.valueOf(mfield1.getEditText().getText()),
+                            uid,
+                            Double.parseDouble(String.valueOf(mfield2.getText())),
+                            Double.parseDouble(String.valueOf(mfield2.getText()))
+                    ));
+                    ((CamperOverviewActivity) a).populateStore(c);
+                } else {
+                    db.productDao().insertAll(new Product(
+                            String.valueOf(mfield1.getEditText().getText()),
+                            Double.parseDouble(String.valueOf(mfield2.getText()))
+                    ));
+                    FragmentManager fm = ((ProductOverviewActivity) a).getSupportFragmentManager();
+                    Fragment recycler = fm.findFragmentById(R.id.product_recycler);
+                    if (recycler instanceof ProductRecyclerFragment) {
+                        ((ProductRecyclerFragment) recycler).productAdded();
+                    }
+                };
                 break;
             default:
                 break;

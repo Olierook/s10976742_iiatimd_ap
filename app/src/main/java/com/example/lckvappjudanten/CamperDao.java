@@ -16,8 +16,17 @@ public interface CamperDao {
 //    @Query("SELECT * FROM camper WHERE uuid IN (:userIds)")
 //    List<Camper> loadAllByIds(int[] userIds);
 
-    @Query("SELECT * FROM camper WHERE tentNumber LIKE :tent")
-    Camper[] findByTentNumber(int tent);
+    @Query("SELECT * FROM camper WHERE user_id LIKE :uid")
+    Camper[] findByUserId(int uid);
+
+    @Query("SELECT * FROM camper WHERE id LIKE :id")
+    Camper[] getCamper(String id);
+
+    @Query("UPDATE camper SET currentBalance = :newBalance WHERE id LIKE :id")
+    void makeSale(Double newBalance, String id);
+
+    @Query("DELETE FROM camper WHERE user_id LIKE :uid")
+    void deleteAll(int uid);
 
     @Insert
     void insertAll(Camper... campers);

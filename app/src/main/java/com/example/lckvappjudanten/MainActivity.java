@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -34,141 +36,130 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    private String selectedCamperId;
+    private Double selectedProductPrice;
+    static boolean active = false;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
+
+    public void setSelectedCamperId(String selectedCamperId) {
+        this.selectedCamperId = selectedCamperId;
+    }
+
+    public void setSelectedProductPrice(Double selectedProductPrice) {
+        this.selectedProductPrice = selectedProductPrice;
+    }
+
+    public void makeSale() {
+        ApiRequester apiRequester = ApiRequester.getInstance(getApplicationContext());
+        int uid = apiRequester.getUserId();
+
+//        Boolean loggedIn = apiRequester.isLoggedIn();
+//        int uid = 1;
+//        if (loggedIn) {
+//            uid = apiRequester.getUserId();
+//        }
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+        Camper camper = db.camperDao().getCamper(selectedCamperId)[0];
+        Double newBalance = camper.getCurrentBalance() - selectedProductPrice;
+        db.camperDao().makeSale(newBalance, selectedCamperId);
+        populateStore(this);
+        Log.d("sale", "makeSale: " + selectedCamperId + " " + selectedProductPrice);
+    }
+
+    public static void populateStore (Context c) {
+        ApiRequester apiRequester = ApiRequester.getInstance(c.getApplicationContext());
+        int uid = apiRequester.getUserId();
+
+//        Boolean loggedIn = apiRequester.isLoggedIn();
+//        int uid = 1;
+//        if (loggedIn) {
+//            uid = apiRequester.getUserId();
+//        }
+        AppDatabase db = AppDatabase.getInstance(c.getApplicationContext());
+        Camper[] campers = db.camperDao().findByUserId(uid);
+        FragmentTransaction ft = ((MainActivity) c).getSupportFragmentManager().beginTransaction();
+        for (int i = 0; i < campers.length; i++) {
+            StoreRowFragment storeRowFragment = new StoreRowFragment(
+                    (MainActivity) c,
+                    campers[i].getName(),
+                    campers[i].getCurrentBalance(),
+                    campers[i].getId()
+            );
+            switch (i) {
+                case 0:
+                    ft.replace(R.id.placeholder1, storeRowFragment);
+                    break;
+                case 1:
+                    ft.replace(R.id.placeholder2, storeRowFragment);
+                    break;
+                case 2:
+                    ft.replace(R.id.placeholder3, storeRowFragment);
+                    break;
+                case 3:
+                    ft.replace(R.id.placeholder4, storeRowFragment);
+                    break;
+                case 4:
+                    ft.replace(R.id.placeholder5, storeRowFragment);
+                    break;
+                case 5:
+                    ft.replace(R.id.placeholder6, storeRowFragment);
+                    break;
+            }
+        }
+        for (int i = campers.length; i <= 6; i++) {
+            EmptyStoreRowFragment emptyStoreRowFragment = new EmptyStoreRowFragment();
+            switch (i) {
+                case 0:
+                    ft.replace(R.id.placeholder1, emptyStoreRowFragment);
+                    break;
+                case 1:
+                    ft.replace(R.id.placeholder2, emptyStoreRowFragment);
+                    break;
+                case 2:
+                    ft.replace(R.id.placeholder3, emptyStoreRowFragment);
+                    break;
+                case 3:
+                    ft.replace(R.id.placeholder4, emptyStoreRowFragment);
+                    break;
+                case 4:
+                    ft.replace(R.id.placeholder5, emptyStoreRowFragment);
+                    break;
+                case 5:
+                    ft.replace(R.id.placeholder6, emptyStoreRowFragment);
+                    break;
+            }
+        }
+        ft.commit();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ApiRequester.getInstance(getApplicationContext()).syncUserId();
+        populateStore(this);
 
-//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
-//            @Override
-//            public void onSuccess(InstanceIdResult instanceIdResult) {
-//                String token = instanceIdResult.getToken();
-//                Log.i("FCM Token", token);
-////                saveToken(token);
-//            }
-//        });
-
-        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-        Camper[] campers = db.camperDao().findByTentNumber(1);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        for (int i = 0; i < campers.length; i++){
-            if (i == 0) {
-                ft.replace(R.id.placeholder1, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                Log.i("FCM Token", token);
+//                saveToken(token);
             }
-            if (i == 1) {
-                ft.replace(R.id.placeholder2, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
-            }
-            if (i == 2) {
-                ft.replace(R.id.placeholder3, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
-            }
-            if (i == 3) {
-                ft.replace(R.id.placeholder4, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
-            }
-            if (i == 4) {
-                ft.replace(R.id.placeholder5, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
-            }
-            if (i == 5) {
-                ft.replace(R.id.placeholder6, new StoreRowFragment(campers[i].getName(), campers[i].getCurrentBalance()));
-            }
+        });
         }
 
-        ft.commit();
 
-
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-//        ApiRequester apiRequester = new ApiRequester(getApplicationContext());
-        final String URL = "https://sleepy-coast-31145.herokuapp.com/api/campers";
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
-                (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            Log.d("hoi", response.getJSONObject(0).getString("name"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-        final String url = "https://sleepy-coast-31145.herokuapp.com/api/login";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", error.toString());
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("name", "Robbert");
-                params.put("email", "robbert_olierook@hotmail.com");
-                params.put("password", "hallo123");
-
-
-
-                return params;
-            }
-        };
-//        queue.add(postRequest);
-        VolleySingleton.getInstance(this).addToQueue(postRequest);
-
-//        final String url = "https://sleepy-coast-31145.herokuapp.com/api/campers";
-//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-//                new Response.Listener<String>()
-//                {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        // response
-//                        Log.d("Response", response);
-//                    }
-//                },
-//                new Response.ErrorListener()
-//                {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        // error
-//                        Log.d("Error.Response", error.toString());
-//                    }
-//                }
-//        ) {
-//            @Override
-//            protected Map<String, String> getParams()
-//            {
-//                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("name", "Alim");
-//                params.put("tentNumber", "2");
-//                params.put("startingBalance", "10");
-//                params.put("currentBalance", "8.3");
-//                params.put("id", UUID.randomUUID().toString());
-//
-//
-//
-//                return params;
-//            }
-//        };
-////        queue.add(postRequest);
-//        VolleySingleton.getInstance(this).addToQueue(postRequest);
-    }
 }

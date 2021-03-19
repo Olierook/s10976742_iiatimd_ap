@@ -17,11 +17,17 @@
     <string name="add_product_txt">Voeg een product toe</string>
     <string name="balancelabel">Start bedrag</string>
     <string name="namelabel">Deelnemer naam</string>
+
     <string name="add">Toevoegen</string>
+    <string name="done">Klaar</string>
     <string name="cancel">Annuleren</string>
     <string name="add_header">Deelnemer toevoegen</string>
     <string name="title">LCKV App</string>
     <string name="login">Inloggen</string>
+    <string name="register">Registreer</string>
+    <string name="upload">Upload</string>
+    <string name="download">Download</string>
+
 
 
 </resources>
